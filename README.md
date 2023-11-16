@@ -8,8 +8,8 @@
 
 ## Resources
 
-- [Assessments](./DS_Assignments\Assessments)
-- [Submissons](./DS_Assignments\Internships)
+- [Assessments](./DS_Assignments/Assessments)
+- [Submissons](./DS_Assignments/Internships)
 
 ## Plan
 
