@@ -13,5 +13,6 @@
 
 ## Plan
 
-![plot](./docs/plot.png)
+![Plan Diagram](./docs/7a15a85a-6df9-42d5-a77c-d96c950892ec.jpg)
+
 
