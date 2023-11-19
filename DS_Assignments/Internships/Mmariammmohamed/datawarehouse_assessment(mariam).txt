@@ -1,0 +1,28 @@
+Please finish these
+
+
+OLTP vs OLAP in: 
+
+1- Recourses used
+(oltp)uses operational data and focuses on transactional processing
+(olap)Utilizes historical data for analysis and reporting
+2- Purpose
+(otlp)Designed for day-to-day transactional operations(tracking , online transactions)
+(olap) Geared towards business intelligence and decision support
+3- Usage
+ (otlp)used in operational systems in real time
+ (olap)used in data warehouse
+
+SLICING vs DICING
+slicing: cut and to dice means to cut into very small uniform sections 
+dicing: producing a new data cube by picking specific values of various dimensions
+ 
+
+What are data marts?
+ simple form of data warehouse focused on a single subject or line of business
+
+
+Difference between snowflake schema, star schema, galaxy schema
+starschema:Single Fact Table connected to multiple dimension tables with no sub-dimension tables
+snowflake schema:Single Fact Table connects to multiple dimension tables that connects to multiple sub-dimension tables
+galaxy schema:Multiple Fact Tables connects to multiple dimension tables that connects to multiple sub-dimension tables
