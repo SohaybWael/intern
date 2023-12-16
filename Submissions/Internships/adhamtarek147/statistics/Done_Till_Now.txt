@@ -11,5 +11,9 @@
 	.Distrubutions (Bernolli and Binomail => Discrete Random Variable and Normal Distrubusions = > Continuous Random Variable)
 	.Z Scaling of Normal Distrubusions Graphs
 
-3- Infrential Statistics:   
+3- Infrential Statistics:
+	.Sampling Methods
+	.Central Limit Theorem
+
+4- Hypothesis Testing:
 	
