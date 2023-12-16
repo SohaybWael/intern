@@ -1,0 +1,15 @@
+1- Descriptive Statistics:
+        .Qualitative and Quantitative Data
+        .Measures of Central Tendency (mean, median and mode)
+        .Measures of Dispersion (range, variance, standard deviation and coffecient of variance)
+        .Graphs like histogram, pie chart and bar chart and dot chart
+
+2- Pre - Infrential Statistics
+	.Probability
+	.Random Variables
+	.Expected Value
+	.Distrubutions (Bernolli and Binomail => Discrete Random Variable and Normal Distrubusions = > Continuous Random Variable)
+	.Z Scaling of Normal Distrubusions Graphs
+
+3- Infrential Statistics:   
+	
