@@ -16,4 +16,6 @@
 	.Central Limit Theorem
 
 4- Hypothesis Testing:
+	.Formulation of Hypothesis
+	.Testing Using Z-Test and T-Test (Based on The Conditions of The Problem)
 	
