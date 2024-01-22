@@ -1,0 +1,338 @@
+**SALES DATA**
+CREATE VIEW infor AS 
+SELECT customer_id, customer_name
+FROM customers
+
+CREATE VIEW Rate AS
+SELECT order_id , customer_id,payment
+from orders
+where payment<50000;
+
+ALTER VIEW infor AS
+SELECT city FROM customers;
+INSERT INTO infor
+Values(1547,'mariam mohamed','female',23,'mohndseen',213,'giza','giza','egypt')
+DELETE FROM infor
+where customer_id=2;
+
+CREATE VIEW Sales_Dates AS
+SELECT
+year(order_date) AS y,
+month(order_date) AS m,
+day(order_date) AS d, order_id, customer_id FROM orders 
+****SELECT * FROM Sales_Dates
+ORDER BY y, m, d,order_id;
+
+CREATE VIEW Cid AS
+SELECT t1.customer_id, t2.order_id
+FROM customers t1
+JOIN orders t2 ON t1.customer_id = t2.customer_id
+ SELECT*FROM Cid;
+
+CREATE PROCEDURE proo
+AS
+BEGIN
+    SELECT 
+       customer_name, 
+        customer_id
+    FROM 
+        customers
+    ORDER BY 
+      customer_name;
+END;
+ EXEC PROO;
+
+***************BIKE  DATA**************
+CREATE VIEW sales.product_info
+AS
+SELECT
+    product_name, 
+    brand_name, 
+    list_price
+FROM
+production.products p
+INNER JOIN production.brands b 
+ON b.brand_id = p.brand_id;
+SELECT*FROM sales.product_info;
+
+
+CREATE VIEW SalesSummary AS
+SELECT
+    product_id,
+    SUM(quantity) AS TotalQuantity
+FROM Sales.order_items
+GROUP BY product_id;
+SELECT*FROM SalesSummary;
+ 
+ 
+SELECT * FROM sales.product_info;
+UPDATE sales.product_info
+SET list_price =list_price*0.14
+WHERE product_name = 'Trek Checkpoint ALR Frameset - 2019';
+ 
+   
+ALTER PROCEDURE uspFindProducts(@min_list_price AS DECIMAL)
+AS
+BEGIN
+    SELECT
+        product_name,
+        list_price
+    FROM 
+        production.products
+    WHERE
+        list_price >= @min_list_price
+    ORDER BY
+        list_price;
+END;
+EXEC uspFindProducts 2000;
+
+
+CREATE PROCEDURE STAFF
+AS
+BEGIN
+    SELECT staff_id, first_name, last_name
+    FROM sales.staffs;
+END
+EXEC STAFF
+
+
+CREATE PROCEDURE STAFF_ID
+@staff_id INT
+AS
+BEGIN
+    SELECT staff_id, first_name, last_name
+    FROM sales.staffs
+	WHERE staff_id=@staff_id;
+END
+EXEC STAFF_ID 5;
+ 
+
+CREATE PROCEDURE EXSPIVE_PRODUCT
+AS
+BEGIN
+    IF EXISTS (SELECT * FROM production.products WHERE list_price <15000)
+    BEGIN
+        SELECT product_id, model_year, product_name, list_price
+        FROM production.products
+        WHERE list_price > 15000;
+    END
+    ELSE
+    BEGIN
+        PRINT 'No high-prodcut';
+    END
+END;
+
+EXEC EXSPIVE_PRODUCT;
+
+
+CREATE PROCEDURE [uspFindProducts](
+    @min_list_price AS DECIMAL=0
+    ,@max_list_price AS DECIMAL=99999
+)
+AS
+BEGIN
+    SELECT
+        product_name,
+        list_price
+    FROM 
+        production.products
+    WHERE
+        list_price >= @min_list_price AND
+        list_price <= @max_list_price
+    ORDER BY
+        list_price;
+END;
+EXEC uspFindProducts @max_list_price = 900
+,@min_list_price =500;
+
+
+CREATE PROCEDURE Top_Order
+    @TopN INT
+AS
+BEGIN
+    SELECT TOP (@TopN) order_id, list_price,discount
+    FROM sales.order_items
+    ORDER BY list_price DESC;
+END;
+EXEC Top_Order 10;
+
+
+
+CREATE PROCEDURE Increase_Prices
+AS
+BEGIN
+    UPDATE production.products
+	    SET list_price = list_price * 1.15;
+		SELECT list_price,product_id
+		FROM production.products
+		END;
+EXEC Increase_Prices;
+
+
+CREATE PROCEDURE Insert_NEW_STORE
+    @FirstName NVARCHAR(50),
+    @ID INT
+	AS
+BEGIN
+    BEGIN TRY
+        INSERT INTO sales.stores(store_name,store_id)
+        VALUES (@FirstName, @ID);
+        PRINT 'Store inserted successfully.';
+    END TRY
+    BEGIN CATCH
+        PRINT ERROR_MESSAGE();
+    END CATCH
+END;
+EXEC Insert_NEW_STORE 
+@firstname=mohndseen,@ID=89;
+
+
+****window function******
+SELECT
+    order_id,
+    discount,
+    list_price,
+ROW_NUMBER() OVER (ORDER BY  list_price DESC) AS Rownumber
+FROM sales.order_items;
+
+SELECT
+ROW_NUMBER() OVER (ORDER BY customer_id) AS custnum,
+first_name,last_name
+FROM sales.customers;
+ 
+SELECT
+ROW_NUMBER() OVER (ORDER BY product_id) AS custnum,
+order_id
+FROM sales.order_items;
+
+SELECT
+RANK() OVER (ORDER BY list_price) Rank,
+order_id,list_price,quantity
+FROM sales.order_items
+ORDER BY Rank;
+ 
+
+CREATE VIEW sales.vw_staff_sales(
+    staff_id, 
+    year, 
+    net_sales
+) AS
+SELECT 
+    staff_id, 
+    YEAR(order_date), 
+    ROUND(SUM(quantity*list_price*(1-discount)),0)
+FROM 
+    sales.orders o
+INNER JOIN sales.order_items i on i.order_id = o.order_id
+SELECT  net_sales,year,    
+FORMAT (PERCENT_RANK() OVER ( ORDER BY YEAR DESC) ,'P')percent_rank
+FROM sales.vw_staff_sales 
+  
+
+SELECT
+	product_id,
+	product_name,
+	list_price,
+DENSE_RANK () OVER (ORDER BY list_price DESC) PriceRank 
+FROM production.products;
+
+
+CREATE VIEW 
+    sales.vw_category_sales_volume 
+AS
+SELECT 
+    category_name, 
+    YEAR(order_date) year, 
+    SUM(quantity) qty
+FROM 
+    sales.orders o
+INNER JOIN sales.order_items i 
+    ON i.order_id = o.order_id
+INNER JOIN production.products p 
+    ON p.product_id = i.product_id
+INNER JOIN production.categories c 
+    ON c.category_id = p.product_id
+GROUP BY 
+    category_name, 
+    YEAR(order_date);
+	 SELECT*FROM sales.vw_category_sales_volume 
+
+
+SELECT 
+    category_name,
+    year,
+    qty,
+   FIRST_VALUE(category_name) OVER(
+        ORDER BY qty
+    ) FV
+FROM 
+    sales.vw_category_sales_volume
+
+
+SELECT 
+    category_name,
+    year,
+    qty,
+   LAST_VALUE(category_name) OVER(
+        ORDER BY qty
+		RANGE BETWEEN 
+            UNBOUNDED PRECEDING AND 
+            UNBOUNDED FOLLOWING
+
+    ) FV
+FROM 
+    sales.vw_category_sales_volume
+	where
+	year in (2016,2017);
+
+
+
+SELECT
+    product_id,
+    product_id,
+    list_price, 
+    NTILE(4) OVER (ORDER BY list_price) AS Quartile
+FROM production.products;
+
+
+SELECT
+    product_id,
+    product_name,
+    list_price,
+    
+   LEAD( list_price) OVER (ORDER BY  list_price) AS leadD
+FROM production.products;
+
+
+
+SELECT
+    product_id,
+    product_name,
+    list_price,
+    LAG( list_price) OVER (ORDER BY  list_price) AS LAGG
+FROM production.products;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
